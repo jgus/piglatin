@@ -29,7 +29,7 @@ std::move(callback)]() {
 async_converter::~async_converter() {
     {
         std::unique_lock lock{mutex_};
-        cv_.wait(lock, [this] { return done || inbox_.empty(); });
+        cv_.wait(lock, [this] { return canceled || inbox_.empty(); });
         done = true;
         cv_.notify_all();
     }
