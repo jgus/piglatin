@@ -47,4 +47,6 @@ target_sources(piglatin PRIVATE
         async_converter.cc
         async_converter.h
         main.cc
+        tty.cc
+        tty.h
         )
