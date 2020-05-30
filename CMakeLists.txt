@@ -31,10 +31,20 @@ set_target_properties(PigLatinConverter PROPERTIES
         )
 
 #
+# Other Dependencies
+#
+find_package(Threads REQUIRED)
+
+#
 # Our executable
 #
 add_executable(piglatin "")
-target_link_libraries(piglatin PRIVATE PigLatinConverter)
+target_link_libraries(piglatin PRIVATE
+        Threads::Threads
+        PigLatinConverter
+        )
 target_sources(piglatin PRIVATE
+        async_converter.cc
+        async_converter.h
         main.cc
         )
