@@ -17,7 +17,12 @@ std::move(callback)]() {
             cv_.notify_all();
         }
         auto converted = converter_.convert(original);
-        callback(original, converted);
+        {
+            // PigLatinConverter::convert() appears to return immediately when canceled, but still returns a string, with no indication to the caller here whether that string is valid or garbage as a result of cancellation. Check the canceled flag before telling _our_ caller that we have a valid result.
+            std::lock_guard lock{mutex_};
+            if (!canceled)
+                callback(original, converted);
+        }
     }
 }) {}
 
@@ -40,6 +45,7 @@ void async_converter::convert(std::string original) {
 
 void async_converter::cancel() {
     std::lock_guard lock{mutex_};
+    canceled = true;
     done = true;
     converter_.cancel();
     cv_.notify_all();

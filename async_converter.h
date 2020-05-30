@@ -17,6 +17,7 @@ class async_converter {
     std::mutex mutex_;
     std::condition_variable cv_;
     std::thread thread_;
+    bool canceled = false;
     bool done = false;
     std::deque<std::string> inbox_;
     PigLatinConverter converter_;
